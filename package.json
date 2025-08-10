@@ -13,11 +13,11 @@
     "@react-native-community/geolocation": "^3.4.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
-    "better-sqlite3": "^11.1.2",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-native": "^0.80.2",
-    "react-native-paper": "^5.12.5"
+    "react-native-paper": "^5.12.5",
+    "react-native-sqlite-storage": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -27,8 +27,9 @@
     "@testing-library/react": "^16.3.0",
     "@types/better-sqlite3": "^7.6.11",
     "@types/jest": "^29.5.12",
-    "@types/react": "^19.1.9",
-    "@types/react-dom": "^19.1.7",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/react-native-sqlite-storage": "^6.0.5",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "babel-plugin-module-resolver": "^5.0.2",

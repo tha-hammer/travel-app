@@ -18,6 +18,14 @@ module.exports = {
         '^@tests/(.*)$': '<rootDir>/app/tests/$1'
       },
       setupFilesAfterEnv: ['<rootDir>/app/tests/setup.ts'],
+      moduleNameMapper: {
+        '^@models/(.*)$': '<rootDir>/app/models/$1',
+        '^@services/(.*)$': '<rootDir>/app/services/$1',
+        '^@controllers/(.*)$': '<rootDir>/app/controllers/$1',
+        '^@views/(.*)$': '<rootDir>/app/views/$1',
+        '^@tests/(.*)$': '<rootDir>/app/tests/$1',
+        '^react-native-sqlite-storage$': '<rootDir>/app/tests/mocks/react-native-sqlite-storage.js'
+      },
       collectCoverageFrom: [
         'app/**/*.ts',
         '!app/**/*.d.ts',

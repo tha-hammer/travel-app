@@ -1,90 +1,112 @@
-import Database from 'better-sqlite3';
+import SQLite, { SQLiteDatabase as RNSQLiteDB, Location } from 'react-native-sqlite-storage';
 
 export interface SQLiteConfig {
-  filename: string;
-  readonly?: boolean;
-  fileMustExist?: boolean;
+  name: string;
+  location?: Location;
 }
 
-export class SQLiteDatabase {
-  private db: Database.Database;
+// Enable debugging in development
+SQLite.DEBUG(false);
+SQLite.enablePromise(true);
 
-  constructor(config: SQLiteConfig) {
-    const options: any = {};
-    if (config.readonly !== undefined) {
-      options.readonly = config.readonly;
-    }
-    if (config.fileMustExist !== undefined) {
-      options.fileMustExist = config.fileMustExist;
-    }
+export class SQLiteDatabase {
+  private db!: RNSQLiteDB;
+  private isOpen = false;
+
+  constructor(private config: SQLiteConfig) {}
+
+  async open(): Promise<void> {
+    if (this.isOpen) return;
     
-    this.db = new Database(config.filename, options);
+    this.db = await SQLite.openDatabase({
+      name: this.config.name,
+      location: this.config.location || 'default' as Location,
+    });
+    
+    this.isOpen = true;
 
     // Enable foreign keys
-    this.db.pragma('foreign_keys = ON');
+    await this.db.executeSql('PRAGMA foreign_keys = ON');
   }
 
-  get database(): Database.Database {
-    return this.db;
+  async close(): Promise<void> {
+    if (!this.isOpen) return;
+    await this.db.close();
+    this.isOpen = false;
   }
 
-  close(): void {
-    this.db.close();
+  private ensureOpen(): void {
+    if (!this.isOpen) {
+      throw new Error('Database is not open. Call open() first.');
+    }
   }
 
-  // Utility methods for common operations
-  prepare(sql: string) {
-    return this.db.prepare(sql);
+  // Async execute for single statements
+  async executeSql(sql: string, params: any[] = []): Promise<any[]> {
+    this.ensureOpen();
+    const [result] = await this.db.executeSql(sql, params);
+    return result.rows.raw();
   }
 
-  transaction<T>(fn: () => T): T {
-    return this.db.transaction(fn)();
+  // Transaction support
+  async transaction<T>(fn: (tx: any) => Promise<T>): Promise<T> {
+    this.ensureOpen();
+    return new Promise((resolve, reject) => {
+      this.db.transaction(async (tx: any) => {
+        try {
+          const result = await fn(tx);
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      }, reject);
+    });
   }
 
-  exec(sql: string): void {
-    this.db.exec(sql);
-  }
+  // Simple migration runner using async approach for React Native
+  async runMigrations(): Promise<void> {
+    this.ensureOpen();
+    
+    const migrations = [
+      `CREATE TABLE IF NOT EXISTS trips (
+        id TEXT PRIMARY KEY,
+        status TEXT NOT NULL,
+        startAt INTEGER NOT NULL,
+        startLat REAL NOT NULL,
+        startLon REAL NOT NULL,
+        endAt INTEGER,
+        endLat REAL,
+        endLon REAL,
+        distanceMeters REAL NOT NULL DEFAULT 0,
+        title TEXT,
+        notes TEXT,
+        appliedRoutineId TEXT,
+        lastFixAt INTEGER,
+        totalFixes INTEGER NOT NULL DEFAULT 0
+      )`,
+      `CREATE TABLE IF NOT EXISTS trip_fixes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tripId TEXT NOT NULL,
+        ts INTEGER NOT NULL,
+        lat REAL NOT NULL,
+        lon REAL NOT NULL,
+        accuracy REAL NOT NULL,
+        speedMps REAL,
+        source TEXT,
+        FOREIGN KEY(tripId) REFERENCES trips(id)
+      )`,
+      `CREATE TABLE IF NOT EXISTS templates (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        notes TEXT,
+        category TEXT
+      )`,
+      `CREATE INDEX IF NOT EXISTS idx_trip_fixes_trip_ts ON trip_fixes(tripId, ts)`,
+      `CREATE INDEX IF NOT EXISTS idx_trips_status ON trips(status)`
+    ];
 
-  // Simple migration runner using GPT-5's inline approach
-  runMigrations(): void {
-    const migration = `
-BEGIN;
-CREATE TABLE IF NOT EXISTS trips (
-  id TEXT PRIMARY KEY,
-  status TEXT NOT NULL,
-  startAt INTEGER NOT NULL,
-  startLat REAL NOT NULL,
-  startLon REAL NOT NULL,
-  endAt INTEGER,
-  endLat REAL,
-  endLon REAL,
-  distanceMeters REAL NOT NULL DEFAULT 0,
-  title TEXT,
-  notes TEXT,
-  appliedRoutineId TEXT,
-  lastFixAt INTEGER,
-  totalFixes INTEGER NOT NULL DEFAULT 0
-);
-CREATE TABLE IF NOT EXISTS trip_fixes (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  tripId TEXT NOT NULL,
-  ts INTEGER NOT NULL,
-  lat REAL NOT NULL,
-  lon REAL NOT NULL,
-  accuracy REAL NOT NULL,
-  speedMps REAL,
-  source TEXT,
-  FOREIGN KEY(tripId) REFERENCES trips(id)
-);
-CREATE TABLE IF NOT EXISTS templates (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  notes TEXT,
-  category TEXT
-);
-CREATE INDEX IF NOT EXISTS idx_trip_fixes_trip_ts ON trip_fixes(tripId, ts);
-CREATE INDEX IF NOT EXISTS idx_trips_status ON trips(status);
-COMMIT;`;
-    this.db.exec(migration);
+    for (const migration of migrations) {
+      await this.db.executeSql(migration);
+    }
   }
 }

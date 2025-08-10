@@ -1,7 +1,8 @@
 import { SQLiteDatabase } from '../SQLiteDatabase';
 
-export function openDatabase(filename = 'travel-app.db'): SQLiteDatabase {
-  const db = new SQLiteDatabase({ filename });
-  db.runMigrations();
+export async function openDatabase(name = 'travel-app.db'): Promise<SQLiteDatabase> {
+  const db = new SQLiteDatabase({ name });
+  await db.open();
+  await db.runMigrations();
   return db;
 }

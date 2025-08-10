@@ -11,11 +11,13 @@ export interface TripRecordingController extends TripRecordingViewState {
   stop(): Promise<void>;
 }
 
-export function useTripRecording(recorder: TripRecorder): TripRecordingController {
+export function useTripRecording(recorder: TripRecorder | null): TripRecordingController {
   const [state, setState] = useState<TripRecordingViewState>({ isTracking: false, distanceMeters: 0 });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    if (!recorder) return;
+    
     // poll recorder state to reflect updates (scaffold; can switch to event-driven later)
     intervalRef.current = setInterval(() => {
       const s = recorder.getState();
@@ -34,8 +36,8 @@ export function useTripRecording(recorder: TripRecorder): TripRecordingControlle
     () => ({
       isTracking: state.isTracking,
       distanceMeters: state.distanceMeters,
-      start: () => recorder.start(),
-      stop: () => recorder.stop(),
+      start: () => recorder?.start() || Promise.resolve(),
+      stop: () => recorder?.stop() || Promise.resolve(),
     }),
     [state.isTracking, state.distanceMeters, recorder]
   );

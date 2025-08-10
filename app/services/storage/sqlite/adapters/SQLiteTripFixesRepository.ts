@@ -17,9 +17,7 @@ export class SQLiteTripFixesRepository implements TripFixesRepository {
   constructor(private readonly db: SQLiteDatabase) {}
 
   async appendFix(tripId: string, fix: LocationFix & { speedMps?: number | null; source?: string | null }): Promise<void> {
-    const stmt = this.db.prepare(`INSERT INTO trip_fixes (tripId, ts, lat, lon, accuracy, speedMps, source) VALUES (?, ?, ?, ?, ?, ?, ?)`);
-    
-    stmt.run(
+    await this.db.executeSql(`INSERT INTO trip_fixes (tripId, ts, lat, lon, accuracy, speedMps, source) VALUES (?, ?, ?, ?, ?, ?, ?)`, [
       tripId,
       fix.timestamp,
       fix.lat,
@@ -27,12 +25,11 @@ export class SQLiteTripFixesRepository implements TripFixesRepository {
       fix.accuracy,
       fix.speedMps ?? null,
       fix.source ?? 'gps',
-    );
+    ]);
   }
 
   async listByTrip(tripId: string): Promise<TripFix[]> {
-    const stmt = this.db.prepare(`SELECT * FROM trip_fixes WHERE tripId = ? ORDER BY ts ASC`);
-    const rows = stmt.all(tripId) as any[];
+    const rows = await this.db.executeSql(`SELECT * FROM trip_fixes WHERE tripId = ? ORDER BY ts ASC`, [tripId]);
     
     return rows.map(row => ({
       id: row.id,
