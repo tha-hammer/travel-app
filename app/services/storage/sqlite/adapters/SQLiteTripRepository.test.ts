@@ -1,18 +1,13 @@
 import { tripRepositoryContractTests } from '@tests/contracts/TripRepository.contract';
-import { SQLiteDatabase } from '../SQLiteDatabase';
+import { openDatabase } from './SQLiteInit';
 import { SQLiteTripRepository } from './SQLiteTripRepository';
-import { join } from 'path';
-import { unlinkSync, existsSync } from 'fs';
-
-const TEST_DB_PATH = ':memory:'; // Use in-memory database for tests
 
 describe('SQLiteTripRepository', () => {
-  let db: SQLiteDatabase;
   let repository: SQLiteTripRepository;
+  let db: any;
 
   beforeEach(async () => {
-    db = new SQLiteDatabase({ filename: TEST_DB_PATH });
-    await db.runMigrations(join(__dirname, '..', 'migrations'));
+    db = openDatabase(':memory:');
     repository = new SQLiteTripRepository(db);
   });
 

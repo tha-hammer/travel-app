@@ -23,8 +23,8 @@ export default function App() {
   // Real adapters
   const recorder = React.useMemo(() => {
     const db = openDatabase();
-    const trips = new SQLiteTripRepository(db as any);
-    const fixes = new SQLiteTripFixesRepository(db as any);
+    const trips = new SQLiteTripRepository(db);
+    const fixes = new SQLiteTripFixesRepository(db);
     const location: LocationProvider = {
       requestWhenInUse: async () => 'prompt',
       requestAlways: async () => 'prompt',
