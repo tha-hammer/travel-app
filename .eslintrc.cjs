@@ -16,6 +16,7 @@ module.exports = {
     },
   },
   rules: {
+    'react/react-in-jsx-scope': 'off',
     'import/no-restricted-paths': ['error', {
       zones: [
         { target: './app/views', from: './app/services', message: 'Views must not import Services directly. Use controllers.' },

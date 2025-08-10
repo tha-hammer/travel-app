@@ -10,7 +10,10 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "better-sqlite3": "^11.1.2"
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/native-stack": "^6.9.26",
+    "better-sqlite3": "^11.1.2",
+    "react-native-paper": "^5.12.5"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
