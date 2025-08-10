@@ -1,5 +1,6 @@
 import type { SQLiteDatabase } from './SQLiteTripRepository';
 import type { LocationFix } from '../../../services/location/LocationProvider';
+import type { TripFixesRepository } from '../../../models/repositories/TripFixesRepository';
 
 export interface TripFix {
   id?: number;
@@ -12,7 +13,7 @@ export interface TripFix {
   source?: string | null;
 }
 
-export class SQLiteTripFixesRepository {
+export class SQLiteTripFixesRepository implements TripFixesRepository {
   constructor(private readonly db: SQLiteDatabase) {}
 
   async appendFix(tripId: string, fix: LocationFix & { speedMps?: number | null; source?: string | null }): Promise<void> {
