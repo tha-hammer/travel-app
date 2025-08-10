@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Button, Text, Card } from 'react-native-paper';
 import { TripRecordingController } from '@controllers/useTripRecording';
 
-export function HomeScreen({ controller }: { controller: TripRecordingController }) {
+export function HomeScreen({ controller, onStop }: { controller: TripRecordingController; onStop?: () => void }) {
   const miles = controller.distanceMeters / 1609.34;
   return (
     <View style={{ flex: 1, padding: 16, justifyContent: 'center' }}>
@@ -11,7 +11,7 @@ export function HomeScreen({ controller }: { controller: TripRecordingController
         <Text variant="headlineMedium">Distance</Text>
         <Text variant="displaySmall">{miles.toFixed(2)} mi</Text>
         {controller.isTracking ? (
-          <Button mode="contained" buttonColor="#d32f2f" onPress={controller.stop} style={{ marginTop: 24 }}>
+          <Button mode="contained" buttonColor="#d32f2f" onPress={async () => { await controller.stop(); onStop?.(); }} style={{ marginTop: 24 }}>
             STOP
           </Button>
         ) : (
