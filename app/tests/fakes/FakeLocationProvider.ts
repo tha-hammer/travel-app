@@ -1,14 +1,25 @@
-import { LocationFix } from '../../services/location/LocationProvider';
+import { LocationFix, LocationProvider } from '@services/location/LocationProvider';
 
-export class FakeLocationProvider {
+export class FakeLocationProvider implements LocationProvider {
   private handler?: (fix: LocationFix) => void;
-  start(onFix: (fix: LocationFix) => void) {
+  
+  async requestWhenInUse(): Promise<'granted' | 'denied' | 'prompt'> {
+    return 'granted';
+  }
+  
+  async requestAlways(): Promise<'granted' | 'denied' | 'prompt'> {
+    return 'granted';
+  }
+  
+  start(onFix: (fix: LocationFix) => void): void {
     this.handler = onFix;
   }
-  stop() {
+  
+  stop(): void {
     this.handler = undefined;
   }
-  emit(fix: LocationFix) {
+  
+  emit(fix: LocationFix): void {
     this.handler?.(fix);
   }
 }

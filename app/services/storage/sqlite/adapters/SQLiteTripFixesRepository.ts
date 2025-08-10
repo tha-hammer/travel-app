@@ -1,6 +1,6 @@
-import type { SQLiteDatabase } from './SQLiteTripRepository';
-import type { LocationFix } from '../../../services/location/LocationProvider';
-import type { TripFixesRepository } from '../../../models/repositories/TripFixesRepository';
+import { SQLiteDatabase } from '../SQLiteDatabase';
+import { LocationFix } from '@services/location/LocationProvider';
+import { TripFixesRepository } from '@models/repositories/TripFixesRepository';
 
 export interface TripFix {
   id?: number;
@@ -17,8 +17,9 @@ export class SQLiteTripFixesRepository implements TripFixesRepository {
   constructor(private readonly db: SQLiteDatabase) {}
 
   async appendFix(tripId: string, fix: LocationFix & { speedMps?: number | null; source?: string | null }): Promise<void> {
-    const sql = `INSERT INTO trip_fixes (tripId, ts, lat, lon, accuracy, speedMps, source) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    await this.db.execAsync(sql, [
+    const stmt = this.db.prepare(`INSERT INTO trip_fixes (tripId, ts, lat, lon, accuracy, speedMps, source) VALUES (?, ?, ?, ?, ?, ?, ?)`);
+    
+    stmt.run(
       tripId,
       fix.timestamp,
       fix.lat,
@@ -26,11 +27,22 @@ export class SQLiteTripFixesRepository implements TripFixesRepository {
       fix.accuracy,
       fix.speedMps ?? null,
       fix.source ?? 'gps',
-    ]);
+    );
   }
 
   async listByTrip(tripId: string): Promise<TripFix[]> {
-    const { rows } = await this.db.queryAsync<TripFix>(`SELECT * FROM trip_fixes WHERE tripId=? ORDER BY ts ASC`, [tripId]);
-    return rows;
+    const stmt = this.db.prepare(`SELECT * FROM trip_fixes WHERE tripId = ? ORDER BY ts ASC`);
+    const rows = stmt.all(tripId) as any[];
+    
+    return rows.map(row => ({
+      id: row.id,
+      tripId: row.tripId,
+      ts: row.ts,
+      lat: row.lat,
+      lon: row.lon,
+      accuracy: row.accuracy,
+      speedMps: row.speedMps || undefined,
+      source: row.source || undefined
+    }));
   }
 }

@@ -16,13 +16,19 @@ describe('TripRecorder', () => {
 
     const p1: LocationFix = { lat: 0, lon: 0, accuracy: 5, timestamp: 1 };
     location.emit(p1);
+    
+    // Allow async processing to complete
+    await new Promise(resolve => setTimeout(resolve, 10));
 
     // After first valid fix, trip should be active
     const s1 = recorder.getState();
     expect(s1.kind === 'tracking' && s1.distanceMeters === 0).toBe(true);
 
-    const p2: LocationFix = { lat: 0, lon: 0.001, accuracy: 5, timestamp: 2 };
+    const p2: LocationFix = { lat: 0, lon: 0.001, accuracy: 5, timestamp: 10000 }; // 10 seconds for realistic speed
     location.emit(p2);
+    
+    // Allow async processing to complete
+    await new Promise(resolve => setTimeout(resolve, 10));
 
     const s2 = recorder.getState();
     expect(s2.kind === 'tracking' && s2.distanceMeters).toBeTruthy();
