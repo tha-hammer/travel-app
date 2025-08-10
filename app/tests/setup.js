@@ -2,6 +2,8 @@
 // Jest test setup file
 // Add any global test configuration here
 Object.defineProperty(exports, "__esModule", { value: true });
+// Setup for React component testing
+require("@testing-library/jest-dom");
 // Global test utilities
 global.createTestTrip = (overrides = {}) => ({
     id: 'test-trip-id',

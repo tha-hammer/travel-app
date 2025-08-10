@@ -13,7 +13,7 @@ export interface TripRecordingController extends TripRecordingViewState {
 
 export function useTripRecording(recorder: TripRecorder): TripRecordingController {
   const [state, setState] = useState<TripRecordingViewState>({ isTracking: false, distanceMeters: 0 });
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     // poll recorder state to reflect updates (scaffold; can switch to event-driven later)

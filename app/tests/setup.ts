@@ -1,6 +1,9 @@
 // Jest test setup file
 // Add any global test configuration here
 
+// Setup for React component testing
+import '@testing-library/jest-dom';
+
 // Global test utilities
 global.createTestTrip = (overrides: Partial<import('@models/entities/Trip').Trip> = {}) => ({
   id: 'test-trip-id',

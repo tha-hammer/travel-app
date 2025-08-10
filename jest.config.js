@@ -6,10 +6,17 @@ module.exports = {
   testMatch: [
     '<rootDir>/app/**/__tests__/**/*.ts',
     '<rootDir>/app/**/*.test.ts',
-    '<rootDir>/app/**/*.spec.ts'
+    '<rootDir>/app/**/*.spec.ts',
+    '<rootDir>/app/**/__tests__/**/*.tsx',
+    '<rootDir>/app/**/*.test.tsx',
+    '<rootDir>/app/**/*.spec.tsx'
   ],
   transform: {
-    '^.+\\.ts$': 'ts-jest'
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: {
+        jsx: 'react-jsx'
+      }
+    }]
   },
   moduleNameMapper: {
     '^@models/(.*)$': '<rootDir>/app/models/$1',
@@ -19,6 +26,10 @@ module.exports = {
     '^@tests/(.*)$': '<rootDir>/app/tests/$1',
     '^@utils/(.*)$': '<rootDir>/app/utils/$1'
   },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(react-native|@react-native|@react-navigation|react-native-paper)/)',
+  ],
   collectCoverageFrom: [
     'app/**/*.ts',
     '!app/**/*.d.ts',

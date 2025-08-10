@@ -37,6 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = App;
+const jsx_runtime_1 = require("react/jsx-runtime");
 const React = __importStar(require("react"));
 const native_1 = require("@react-navigation/native");
 const native_stack_1 = require("@react-navigation/native-stack");
@@ -52,7 +53,7 @@ const SQLiteInit_1 = require("@services/storage/sqlite/adapters/SQLiteInit");
 const geolocation_1 = __importDefault(require("@react-native-community/geolocation"));
 const Stack = (0, native_stack_1.createNativeStackNavigator)();
 function Header({ title }) {
-    return <react_native_paper_1.Appbar.Header><react_native_paper_1.Appbar.Content title={title}/></react_native_paper_1.Appbar.Header>;
+    return (0, jsx_runtime_1.jsx)(react_native_paper_1.Appbar.Header, { children: (0, jsx_runtime_1.jsx)(react_native_paper_1.Appbar.Content, { title: title }) });
 }
 function App() {
     // Real adapters
@@ -74,19 +75,5 @@ function App() {
         return new TripRecorder_1.TripRecorder({ trips, fixes, location });
     }, []);
     const controller = (0, useTripRecording_1.useTripRecording)(recorder);
-    return (<react_native_paper_1.Provider>
-      <native_1.NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Home" options={{ header: () => <Header title="Travel App"/> }}>
-            {({ navigation }) => (<HomeScreen_1.HomeScreen controller={controller} onStop={() => navigation.navigate('TripDetails')}/>)}
-          </Stack.Screen>
-          <Stack.Screen name="TripDetails" options={{ header: () => <Header title="Trip Details"/> }}>
-            {({ navigation }) => (<TripDetailsScreen_1.TripDetailsScreen onSave={() => navigation.navigate('Home')}/>)}
-          </Stack.Screen>
-          <Stack.Screen name="Trips" options={{ header: () => <Header title="Trips"/> }}>
-            {() => <TripsScreen_1.TripsScreen trips={[]} onOpen={() => { }}/>}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </native_1.NavigationContainer>
-    </react_native_paper_1.Provider>);
+    return ((0, jsx_runtime_1.jsx)(react_native_paper_1.Provider, { children: (0, jsx_runtime_1.jsx)(native_1.NavigationContainer, { children: (0, jsx_runtime_1.jsxs)(Stack.Navigator, { children: [(0, jsx_runtime_1.jsx)(Stack.Screen, { name: "Home", options: { header: () => (0, jsx_runtime_1.jsx)(Header, { title: "Travel App" }) }, children: ({ navigation }) => ((0, jsx_runtime_1.jsx)(HomeScreen_1.HomeScreen, { controller: controller, onStop: () => navigation.navigate('TripDetails') })) }), (0, jsx_runtime_1.jsx)(Stack.Screen, { name: "TripDetails", options: { header: () => (0, jsx_runtime_1.jsx)(Header, { title: "Trip Details" }) }, children: ({ navigation }) => ((0, jsx_runtime_1.jsx)(TripDetailsScreen_1.TripDetailsScreen, { onSave: () => navigation.navigate('Home') })) }), (0, jsx_runtime_1.jsx)(Stack.Screen, { name: "Trips", options: { header: () => (0, jsx_runtime_1.jsx)(Header, { title: "Trips" }) }, children: () => (0, jsx_runtime_1.jsx)(TripsScreen_1.TripsScreen, { trips: [], onOpen: () => { } }) })] }) }) }));
 }
