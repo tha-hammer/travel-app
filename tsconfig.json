@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@models/*": ["app/models/*"],
+      "@services/*": ["app/services/*"],
+      "@controllers/*": ["app/controllers/*"],
+      "@views/*": ["app/views/*"],
+      "@tests/*": ["app/tests/*"],
+      "@utils/*": ["app/utils/*"]
+    }
+  },
+  "include": ["app/**/*.ts", "app/**/*.tsx", "*.cjs", "*.config.*"],
+  "exclude": ["node_modules", "android", "ios"]
+}
