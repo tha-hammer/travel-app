@@ -9,14 +9,14 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@models/*": ["app/models/*"],
       "@services/*": ["app/services/*"],
       "@controllers/*": ["app/controllers/*"],
       "@views/*": ["app/views/*"],
-      "@tests/*": ["app/tests/*"],
-      "@utils/*": ["app/utils/*"]
+      "@tests/*": ["app/tests/*"]
     }
   },
   "include": ["app/**/*.ts", "app/**/*.tsx", "*.cjs", "*.config.*"],

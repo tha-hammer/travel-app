@@ -21,6 +21,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@react-native-community/cli": "^19.1.1",
+    "@react-native/metro-config": "^0.80.2",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@types/better-sqlite3": "^7.6.11",
@@ -29,6 +31,7 @@
     "@types/react-dom": "^19.1.7",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^9.7.0",
     "eslint-plugin-import": "^2.29.1",
     "globals": "^16.3.0",
