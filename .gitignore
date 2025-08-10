@@ -1,0 +1,101 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# General editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Xcode
+DerivedData/
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+project.xcworkspace/xcuserdata/
+
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+.swiftpm/
+# Keep Package.resolved by default (recommended)
+#!Package.resolved
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+Carthage/Build.*.xz
+
+# Accio
+.accio/
+Dependencies/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Archives & symbols
+*.xcarchive
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# XCTest / Xcode results
+*.xcresult
+
+# Coverage
+*.gcno
+*.gcda
+*.coverage
+*.profraw
+*.profdata
+*.lcov
+
+# Provisioning & signing
+*.mobileprovision
+*.provisionprofile
+*.cer
+*.p12
+*.p8
+
+# SwiftLint / SwiftFormat caches
+.swiftlint_cache
+.swiftformat
+
+# Logs
+*.log
+
+# Env / secrets
+.env
+.env.*
+
+# Temporary files
+*.orig
+*.rej 
+node_modules
